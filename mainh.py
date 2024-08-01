@@ -29,8 +29,8 @@ tracker=Tracker()
 tracker1=Tracker()
 tracker2=Tracker()
 tracker3=Tracker()
-cy1=250
-cy2=255
+cy1=300
+cy2=315
 offset=8
 upcar={}
 downcar={}
@@ -101,14 +101,14 @@ while True:
         cx3=int(x3+x4)//2
         cy3=int(y3+y4)//2
         
+        cv2.rectangle(frame,(x3,y3),(x4,y4),(255,0,255),2)
+        cvzone.putTextRect(frame,f'Car',(x3,y3),1,1)
+        
         if cy1<(cy3+offset) and cy1>(cy3-offset):
             upcar[id1]=(cx3,cy3)
         if id1 in upcar:
               if cy2<(cy3+offset) and cy2>(cy3-offset):
-
                 cv2.circle(frame,(cx3,cy3),4,(255,0,0),-1)
-                cv2.rectangle(frame,(x3,y3),(x4,y4),(255,0,255),2)
-                cvzone.putTextRect(frame,f'Car',(x3,y3),1,1)
 
                 if countercarup.count(id1)==0:
                     countercarup.append(id1)
@@ -118,10 +118,7 @@ while True:
             downcar[id1]=(cx3,cy3)
         if id1 in downcar:
               if cy1<(cy3+offset) and cy1>(cy3-offset):
-
                 cv2.circle(frame,(cx3,cy3),4,(255,0,255),-1)
-                cv2.rectangle(frame,(x3,y3),(x4,y4),(255,0,0),2)
-                cvzone.putTextRect(frame,f'Car',(x3,y3),1,1)
 
                 if countercardown.count(id1)==0:
                     countercardown.append(id1)
@@ -133,13 +130,14 @@ while True:
         cx4=int(x5+x6)//2
         cy4=int(y5+y6)//2
         
+        cv2.rectangle(frame,(x5,y5),(x6,y6),(0,0,255),2)
+        cvzone.putTextRect(frame,f'Bus',(x5,y5),1,1)
+        
         if cy1<(cy4+offset) and cy1>(cy4-offset):
             upbus[id2]=(cx4,cy4)
         if id2 in upbus:
               if cy2<(cy4+offset) and cy2>(cy4-offset):
                 cv2.circle(frame,(cx4,cy4),4,(255,0,0),-1)
-                cv2.rectangle(frame,(x5,y5),(x6,y6),(255,0,255),2)
-                cvzone.putTextRect(frame,f'Bus',(x5,y5),1,1)
 
                 if counterbusup.count(id2)==0:
                     counterbusup.append(id2)
@@ -151,8 +149,6 @@ while True:
         if id2 in downbus:
               if cy1<(cy4+offset) and cy1>(cy4-offset):
                 cv2.circle(frame,(cx4,cy4),4,(255,0,255),-1)
-                cv2.rectangle(frame,(x5,y5),(x6,y6),(255,0,0),2)
-                cvzone.putTextRect(frame,f'Bus',(x5,y5),1,1)
 
                 if counterbusdown.count(id2)==0:
                     counterbusdown.append(id2)
@@ -165,14 +161,14 @@ while True:
         cy5=int(y7+y8)//2
         cx5=int(x7+x8)//2
 
+        cv2.rectangle(frame,(x7,y7),(x8,y8),(255,255,0),2)
+        cvzone.putTextRect(frame,f'Truck',(x7,y7),1,1)
+        
         if cy1<(cy5+offset) and cy1>(cy5-offset):
             uptruck[id3]=(cx5,cy5)
         if id3 in uptruck:
             if cy2<(cy5+offset) and cy2>(cy5-offset):
-
                 cv2.circle(frame,(cx5,cy5),4,(255,0,0),-1)
-                cv2.rectangle(frame,(x7,y7),(x8,y8),(255,0,255),2)
-                cvzone.putTextRect(frame,f'Truck',(x7,y7),1,1)
 
                 if countertruckup.count(id3)==0:
                     countertruckup.append(id3)
@@ -183,10 +179,7 @@ while True:
             downtruck[id3]=(cx5,cy5)
         if id3 in downtruck:
             if cy1<(cy5+offset) and cy1>(cy5-offset):
-
                 cv2.circle(frame,(cx5,cy5),4,(255,0,255),-1)
-                cv2.rectangle(frame,(x7,y7),(x8,y8),(255,0,0),2)
-                cvzone.putTextRect(frame,f'Truck',(x7,y7),1,1)
 
                 if countertruckdown.count(id3)==0:
                     countertruckdown.append(id3)
@@ -200,14 +193,15 @@ while True:
         cy6=int(y9+y10)//2
         cx6=int(x9+x10)//2
 
+        cv2.rectangle(frame,(x9,y9),(x10,y10),(255,255,255),2)
+        cvzone.putTextRect(frame,f'Motorcycle',(x9,y9),1,1)
+        
         if cy1<(cy6+offset) and cy1>(cy6-offset):
             upmotorcycle[id4]=(cx6,cy6)
         if id4 in upmotorcycle:
             if cy2<(cy6+offset) and cy2>(cy6-offset):
 
                 cv2.circle(frame,(cx6,cy6),4,(255,0,0),-1)
-                cv2.rectangle(frame,(x9,y9),(x10,y10),(255,0,255),2)
-                cvzone.putTextRect(frame,f'Motorcycle',(x9,y9),1,1)
 
                 if countermotorcycleup.count(id4)==0:
                     countermotorcycleup.append(id4)
@@ -218,18 +212,15 @@ while True:
             downmotorcycle[id4]=(cx6,cy6)
         if id4 in downmotorcycle:
             if cy1<(cy6+offset) and cy1>(cy6-offset):
-
                 cv2.circle(frame,(cx6,cy6),4,(255,0,255),-1)
-                cv2.rectangle(frame,(x9,y9),(x10,y10),(255,0,0),2)
-                cvzone.putTextRect(frame,f'Motorcycle',(x9,y9),1,1)
 
                 if countermotorcycledown.count(id4)==0:
                     countermotorcycledown.append(id4)
 
 
 
-    cv2.line(frame,(1,cy1),(1018,cy1),(0,255,0),2)
-    cv2.line(frame,(3,cy2),(1016,cy2),(0,0,255),2)
+    cv2.line(frame,(1,cy1),(1018,cy1),(0,255,0),1)
+    cv2.line(frame,(3,cy2),(1016,cy2),(0,0,255),1)
 
     cup=len(countercarup)
     cup1=len(counterbusup)
