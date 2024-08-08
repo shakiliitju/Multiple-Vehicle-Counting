@@ -15,7 +15,7 @@ def RGB(event, x, y, flags, param):
 
 cv2.namedWindow('RGB')
 cv2.setMouseCallback('RGB', RGB)
-cap=cv2.VideoCapture('test1.mp4')
+cap=cv2.VideoCapture('ju2.mp4')
 
 
 my_file = open("coco.txt", "r")
@@ -29,8 +29,9 @@ tracker=Tracker()
 tracker1=Tracker()
 tracker2=Tracker()
 tracker3=Tracker()
-cy1=300
-cy2=315
+
+cy1=350
+cy2=365
 offset=8
 upcar={}
 downcar={}
@@ -92,7 +93,7 @@ while True:
         
         elif 'motorcycle' in c:
              list3.append([x1,y1,x2,y2])
-            
+
 
 ###########################CarUp###############################################
     bbox_idx=tracker.update(list)
@@ -232,17 +233,17 @@ while True:
     cdown2=len(countertruckdown)
     cdown3=len(countermotorcycledown)
 
-    cvzone.putTextRect(frame,f'Number of Vehicles Entering',(1,30),2,2)
-    cvzone.putTextRect(frame,f'Car:{cup}',(20,75),2,2)
-    cvzone.putTextRect(frame,f'Bus:{cup1}',(20,115),2,2)
-    cvzone.putTextRect(frame,f'Truck:{cup2}',(20,155),2,2)
-    cvzone.putTextRect(frame,f'Motorcycle:{cup3}',(20,195),2,2)
+    cvzone.putTextRect(frame,f'Number of Vehicles Leaving',(1,30),2,2)
+    cvzone.putTextRect(frame,f'Car:{cdown}',(20,75),2,2)
+    cvzone.putTextRect(frame,f'Bus:{cdown1}',(20,115),2,2)
+    cvzone.putTextRect(frame,f'Truck:{cdown2}',(20,155),2,2)
+    cvzone.putTextRect(frame,f'Motorcycle:{cdown3}',(20,195),2,2)
 
-    cvzone.putTextRect(frame,f'Number of Vehicles Leaving',(550,30),2,2)
-    cvzone.putTextRect(frame,f'Car:{cdown}',(800,75),2,2)
-    cvzone.putTextRect(frame,f'Bus:{cdown1}',(800,115),2,2)
-    cvzone.putTextRect(frame,f'Truck:{cdown2}',(800,155),2,2)
-    cvzone.putTextRect(frame,f'Motorcycle:{cdown3}',(800,195),2,2)
+    cvzone.putTextRect(frame,f'Number of Vehicles Entering',(530,30),2,2)
+    cvzone.putTextRect(frame,f'Car:{cup}',(800,75),2,2)
+    cvzone.putTextRect(frame,f'Bus:{cup1}',(800,115),2,2)
+    cvzone.putTextRect(frame,f'Truck:{cup2}',(800,155),2,2)
+    cvzone.putTextRect(frame,f'Motorcycle:{cup3}',(800,195),2,2)
 
     cv2.imshow("RGB", frame)
     if cv2.waitKey(1)&0xFF==27:
