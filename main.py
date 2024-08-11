@@ -13,7 +13,6 @@ model = YOLO("yolov10s.pt")
 my_file = open("coco.txt", "r")
 data = my_file.read()
 class_list = data.split("\n") 
-#print(class_list)
 
 
 # Create directory to save images if it doesn't exist
@@ -27,23 +26,24 @@ def RGB(event, x, y, flags, param):
         print(point)
   
         
-
 cv2.namedWindow('RGB')
 cv2.setMouseCallback('RGB', RGB)
 cap=cv2.VideoCapture('ju2.mp4')
 
 
-
-count=0
-
+# Initialize the tracker
 tracker=Tracker()
 tracker1=Tracker()
 tracker2=Tracker()
 tracker3=Tracker()
 
-cy1=360
-cy2=380
+# Set the line position and offset
+cy1=350
+cy2=365
 offset=8
+
+# Initialize variables
+count=0
 upcar={}
 downcar={}
 countercarup=[]
@@ -75,22 +75,20 @@ while True:
    
 
     results=model.predict(frame)
- #   print(results)
     a=results[0].boxes.data
     px=pd.DataFrame(a).astype("float")
-#    print(px)
     
     list=[]
     list1=[]
     list2=[]
     list3=[]
     for index,row in px.iterrows():
-#        print(row)
  
         x1=int(row[0])
         y1=int(row[1])
         x2=int(row[2])
         y2=int(row[3])
+
         d=int(row[5])
         c=class_list[d]
         if 'car' in c:
@@ -255,7 +253,6 @@ while True:
             upmotorcycle[id4]=(cx6,cy6)
         if id4 in upmotorcycle:
             if cy2<(cy6+offset) and cy2>(cy6-offset):
-
                 cv2.circle(frame,(cx6,cy6),4,(255,0,0),-1)
 
                 if countermotorcycleup.count(id4)==0:
@@ -263,7 +260,7 @@ while True:
                     # Crop and save the car image
                     motorcycle_image = frame[y9:y10, x9:x10]
                     # Resize the cropped image to a larger size
-                    #resized_motorcycle_image = cv2.resize(bus_image, (300, 300))  # Resize to 300x300 pixels or any desired size
+                    #resized_motorcycle_image = cv2.resize(motorcycle_image, (300, 450))  # Resize to 300x300 pixels or any desired size
                     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
                     cv2.imwrite(f"images/motorcycle_enter_{timestamp}.jpg", motorcycle_image)
                 
@@ -281,7 +278,7 @@ while True:
                     # Crop and save the car image
                     motorcycle_image = frame[y9:y10, x9:x10]
                     # Resize the cropped image to a larger size
-                    #resized_motorcycle_image = cv2.resize(bus_image, (300, 300))  # Resize to 300x300 pixels or any desired size
+                    #resized_motorcycle_image = cv2.resize(motorcycle_image, (300, 450))  # Resize to 300x300 pixels or any desired size
                     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
                     cv2.imwrite(f"images/motorcycle_leave_{timestamp}.jpg", motorcycle_image)
                  
@@ -313,7 +310,9 @@ while True:
     cvzone.putTextRect(frame,f'Motorcycle:{cup3}',(800,195),2,2)
 
     cv2.imshow("RGB", frame)
-    if cv2.waitKey(1)&0xFF==27:
+    # Break the loop if 'q' is pressed
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         break
+
 cap.release()
 cv2.destroyAllWindows()
