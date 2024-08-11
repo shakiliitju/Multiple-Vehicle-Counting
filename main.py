@@ -1,10 +1,25 @@
 import cv2
-import pandas as pd
-from ultralytics import YOLO
-import cvzone
 import numpy as np
-from tracker import*
-model=YOLO('yolov8s.pt')
+from ultralytics import YOLO
+import pandas as pd
+import cvzone
+from tracker import Tracker
+import os
+from datetime import datetime
+
+
+# Load the model and class list
+model = YOLO("yolov10s.pt")
+my_file = open("coco.txt", "r")
+data = my_file.read()
+class_list = data.split("\n") 
+#print(class_list)
+
+
+# Create directory to save images if it doesn't exist
+if not os.path.exists("images"):
+    os.makedirs("images")
+
 
 def RGB(event, x, y, flags, param):
     if event == cv2.EVENT_MOUSEMOVE :  
@@ -18,10 +33,6 @@ cv2.setMouseCallback('RGB', RGB)
 cap=cv2.VideoCapture('ju2.mp4')
 
 
-my_file = open("coco.txt", "r")
-data = my_file.read()
-class_list = data.split("\n") 
-#print(class_list)
 
 count=0
 
@@ -30,8 +41,8 @@ tracker1=Tracker()
 tracker2=Tracker()
 tracker3=Tracker()
 
-cy1=350
-cy2=365
+cy1=360
+cy2=380
 offset=8
 upcar={}
 downcar={}
@@ -113,7 +124,13 @@ while True:
 
                 if countercarup.count(id1)==0:
                     countercarup.append(id1)
-              
+                    # Crop and save the car image
+                    car_image = frame[y3:y4, x3:x4]
+                    # Resize the cropped image to a larger size
+                    #resized_car_image = cv2.resize(car_image, (300, 300))  # Resize to 300x300 pixels or any desired size
+                    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                    cv2.imwrite(f"images/car_enter_{timestamp}.jpg", car_image)
+                 
 ################################cardown###############################################                 
         if cy2<(cy3+offset) and cy2>(cy3-offset):
             downcar[id1]=(cx3,cy3)
@@ -123,6 +140,14 @@ while True:
 
                 if countercardown.count(id1)==0:
                     countercardown.append(id1)
+                    # Crop and save the car image
+                    car_image = frame[y3:y4, x3:x4]
+                    # Resize the cropped image to a larger size
+                    #resized_car_image = cv2.resize(car_image, (300, 300))  # Resize to 300x300 pixels or any desired size
+                    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                    cv2.imwrite(f"images/car_leave_{timestamp}.jpg", car_image)
+                 
+
 
 ############################BusUp#######################################################
     bbox1_idx=tracker1.update(list1)
@@ -142,6 +167,13 @@ while True:
 
                 if counterbusup.count(id2)==0:
                     counterbusup.append(id2)
+                    # Crop and save the car image
+                    bus_image = frame[y5:y6, x5:x6]
+                    # Resize the cropped image to a larger size
+                    #resized_bus_image = cv2.resize(bus_image, (300, 300))  # Resize to 300x300 pixels or any desired size
+                    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                    cv2.imwrite(f"images/bus_enter_{timestamp}.jpg", bus_image)
+                 
 
 
 ############################downbus#####################################################
@@ -153,6 +185,13 @@ while True:
 
                 if counterbusdown.count(id2)==0:
                     counterbusdown.append(id2)
+                    # Crop and save the car image
+                    bus_image = frame[y5:y6, x5:x6]
+                    # Resize the cropped image to a larger size
+                    #resized_bus_image = cv2.resize(bus_image, (300, 300))  # Resize to 300x300 pixels or any desired size
+                    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                    cv2.imwrite(f"images/bus_leave_{timestamp}.jpg", bus_image)
+                 
 
 
 ############################truckUp#######################################################
@@ -173,6 +212,14 @@ while True:
 
                 if countertruckup.count(id3)==0:
                     countertruckup.append(id3)
+                    # Crop and save the car image
+                    truck_image = frame[y7:y8, x7:x8]
+                    # Resize the cropped image to a larger size
+                    #resized_truck_image = cv2.resize(bus_image, (300, 300))  # Resize to 300x300 pixels or any desired size
+                    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                    cv2.imwrite(f"images/truck_enter_{timestamp}.jpg", truck_image)
+                 
+
 
 
 ############################downtruck#####################################################
@@ -184,6 +231,13 @@ while True:
 
                 if countertruckdown.count(id3)==0:
                     countertruckdown.append(id3)
+                    # Crop and save the car image
+                    truck_image = frame[y7:y8, x7:x8]
+                    # Resize the cropped image to a larger size
+                    #resized_truck_image = cv2.resize(bus_image, (300, 300))  # Resize to 300x300 pixels or any desired size
+                    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                    cv2.imwrite(f"images/truck_leave_{timestamp}.jpg", truck_image)
+                 
 
 
 
@@ -206,6 +260,13 @@ while True:
 
                 if countermotorcycleup.count(id4)==0:
                     countermotorcycleup.append(id4)
+                    # Crop and save the car image
+                    motorcycle_image = frame[y9:y10, x9:x10]
+                    # Resize the cropped image to a larger size
+                    #resized_motorcycle_image = cv2.resize(bus_image, (300, 300))  # Resize to 300x300 pixels or any desired size
+                    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                    cv2.imwrite(f"images/motorcycle_enter_{timestamp}.jpg", motorcycle_image)
+                
 
 
 ############################downmotorcycle#####################################################
@@ -217,7 +278,13 @@ while True:
 
                 if countermotorcycledown.count(id4)==0:
                     countermotorcycledown.append(id4)
-
+                    # Crop and save the car image
+                    motorcycle_image = frame[y9:y10, x9:x10]
+                    # Resize the cropped image to a larger size
+                    #resized_motorcycle_image = cv2.resize(bus_image, (300, 300))  # Resize to 300x300 pixels or any desired size
+                    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                    cv2.imwrite(f"images/motorcycle_leave_{timestamp}.jpg", motorcycle_image)
+                 
 
 
     cv2.line(frame,(1,cy1),(1018,cy1),(0,255,0),1)
