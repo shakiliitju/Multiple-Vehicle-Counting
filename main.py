@@ -9,7 +9,7 @@ from datetime import datetime
 
 
 # Load the model and class list
-model = YOLO("yolov10s.pt")
+model = YOLO("yolov14s.pt")
 my_file = open("coco.txt", "r")
 data = my_file.read()
 class_list = data.split("\n") 
@@ -36,33 +36,43 @@ tracker=Tracker()
 tracker1=Tracker()
 tracker2=Tracker()
 tracker3=Tracker()
+tracker4=Tracker()
 
 # Set the line position and offset
 cy1=350
 cy2=365
 offset=8
 
-# Initialize variables
+# Car Count 
 count=0
 upcar={}
 downcar={}
 countercarup=[]
 countercardown=[]
 
+#Bus Count
 upbus={}
 downbus={}
 counterbusdown=[]
 counterbusup=[]
 
+#Truck Count
 uptruck={}
 downtruck={}
 countertruckup=[]
 countertruckdown=[]
 
+#Motorcycle Count
 upmotorcycle={}
 downmotorcycle={}
 countermotorcycleup=[]
 countermotorcycledown=[]
+
+#Bycycle Count
+upbicycle={}
+downbicycle={}
+counterbicycleup=[]
+counterbicycledown=[]
 
 while True:    
     ret,frame = cap.read()
@@ -82,6 +92,7 @@ while True:
     list1=[]
     list2=[]
     list3=[]
+    list4=[]
     for index,row in px.iterrows():
  
         x1=int(row[0])
@@ -101,6 +112,9 @@ while True:
              list2.append([x1,y1,x2,y2])
         
         elif 'motorcycle' in c:
+             list3.append([x1,y1,x2,y2])
+        
+        elif 'bicycle' in c:
              list3.append([x1,y1,x2,y2])
 
 
@@ -145,8 +159,7 @@ while True:
                     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
                     cv2.imwrite(f"images/car_leave_{timestamp}.jpg", car_image)
                  
-
-
+ 
 ############################BusUp#######################################################
     bbox1_idx=tracker1.update(list1)
     for bbox1 in bbox1_idx:
@@ -281,6 +294,52 @@ while True:
                     #resized_motorcycle_image = cv2.resize(motorcycle_image, (300, 450))  # Resize to 300x300 pixels or any desired size
                     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
                     cv2.imwrite(f"images/motorcycle_leave_{timestamp}.jpg", motorcycle_image)
+
+
+
+
+   ############################bicycleUp#######################################################
+    bbox4_idx=tracker4.update(list4)
+    for bbox4 in bbox4_idx:
+        x11,y11,x12,y12,id5=bbox4
+        cy7=int(y11+y12)//2
+        cx7=int(x11+x12)//2
+
+        cv2.rectangle(frame,(x11,y11),(x12,y12),(255,255,255),2)
+        cvzone.putTextRect(frame,f' Bicycle',(x11,y11),1,1)
+        
+        if cy1<(cy7+offset) and cy1>(cy7-offset):
+            upbicycle[id5]=(cx7,cy7)
+        if id5 in upbicycle:
+            if cy2<(cy7+offset) and cy2>(cy7-offset):
+                cv2.circle(frame,(cx7,cy7),4,(255,0,0),-1)
+
+                if counterbicycleup.count(id5)==0:
+                    counterbicycleup.append(id5)
+                    # Crop and save the car image
+                    bicycle_image = frame[y11:y12, x11:x12]
+                    # Resize the cropped image to a larger size
+                    #resized_motorcycle_image = cv2.resize(motorcycle_image, (300, 450))  # Resize to 300x300 pixels or any desired size
+                    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                    cv2.imwrite(f"images/bicycle_enter_{timestamp}.jpg", bicycle_image)
+                
+
+
+############################downmotorcycle#####################################################
+        if cy2<(cy7+offset) and cy2>(cy7-offset):
+            downbicycle[id5]=(cx7,cy7)
+        if id5 in downbicycle:
+            if cy1<(cy7+offset) and cy1>(cy7-offset):
+                cv2.circle(frame,(cx7,cy7),4,(255,0,255),-1)
+ 
+                if counterbicycledown.count(id5)==0:
+                    counterbicycledown.append(id5)
+                    # Crop and save the car image
+                    bicycle_image = frame[y11:y12, x11:x12]
+                    # Resize the cropped image to a larger size
+                    #resized_motorcycle_image = cv2.resize(motorcycle_image, (300, 450))  # Resize to 300x300 pixels or any desired size
+                    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                    cv2.imwrite(f"images/bicycle_leave_{timestamp}.jpg", bicycle_image)
                  
 
 
@@ -291,23 +350,27 @@ while True:
     cup1=len(counterbusup)
     cup2=len(countertruckup)
     cup3=len(countermotorcycleup)
+    cup4=len(counterbicycleup)
 
     cdown=len(countercardown)
     cdown1=len(counterbusdown)
     cdown2=len(countertruckdown)
     cdown3=len(countermotorcycledown)
+    cdown4=len(counterbicycledown)
 
     cvzone.putTextRect(frame,f'Number of Vehicles Leaving',(1,30),2,2)
     cvzone.putTextRect(frame,f'Car:{cdown}',(20,75),2,2)
     cvzone.putTextRect(frame,f'Bus:{cdown1}',(20,115),2,2)
     cvzone.putTextRect(frame,f'Truck:{cdown2}',(20,155),2,2)
     cvzone.putTextRect(frame,f'Motorcycle:{cdown3}',(20,195),2,2)
+    cvzone.putTextRect(frame,f'Bicycle:{cdown4}',(20,235),2,2)
 
     cvzone.putTextRect(frame,f'Number of Vehicles Entering',(530,30),2,2)
     cvzone.putTextRect(frame,f'Car:{cup}',(800,75),2,2)
     cvzone.putTextRect(frame,f'Bus:{cup1}',(800,115),2,2)
     cvzone.putTextRect(frame,f'Truck:{cup2}',(800,155),2,2)
     cvzone.putTextRect(frame,f'Motorcycle:{cup3}',(800,195),2,2)
+    cvzone.putTextRect(frame,f'Bicycle:{cup4}',(800,235),2,2)
 
     cv2.imshow("RGB", frame)
     # Break the loop if 'q' is pressed

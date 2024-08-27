@@ -1,0 +1,5 @@
+train: F:\Github\Project\yolov8-multiple-vehicle-counting\dataset\train\images
+val: F:\Github\Project\yolov8-multiple-vehicle-counting\dataset\val\images
+
+nc:  15
+names:  ['bicycle','car','motorcycle','bus','truck', 'Animal Cart','Auto Rickshaw', 'Heavy Truck', 'Large Bus', 'Medium Truck', 'Microbus', 'Minibus','Rickshaw', 'Small Truck', 'Tempo']
