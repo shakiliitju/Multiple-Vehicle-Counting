@@ -9,7 +9,7 @@ from datetime import datetime
 
 
 # Load the model and class list
-model = YOLO("yolov14s.pt")
+model = YOLO("yolov10_custom.pt")
 my_file = open("coco.txt", "r")
 data = my_file.read()
 class_list = data.split("\n") 
